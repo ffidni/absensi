@@ -26,16 +26,9 @@ class _KehadiranPageState extends State<KehadiranPage> {
     AbsenModel(
       id: 2,
       tipe: "keluar",
-      nama: "Aldi",
+      nama: "Haikal",
       tanggal: DateTime.now(),
       userId: 2,
-    ),
-    AbsenModel(
-      id: 3,
-      tipe: "masuk",
-      nama: "Fitri",
-      tanggal: DateTime.now(),
-      userId: 3,
     ),
   ];
 
