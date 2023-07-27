@@ -97,3 +97,39 @@ String getTimePeriod() {
     return 'malam';
   }
 }
+
+String convertMinutesToTimeFormat(int minutes) {
+  if (minutes < 0) {
+    return "Masukan tidak valid"; // Handle negative input, if necessary
+  }
+
+  int hours = minutes ~/ 60;
+  int remainingMinutes = minutes % 60;
+
+  // Construct the time format string
+  String timeFormat = "";
+
+  if (hours > 0) {
+    timeFormat += "$hours jam ";
+  }
+
+  if (remainingMinutes > 0) {
+    timeFormat += "$remainingMinutes menit";
+  }
+
+  return timeFormat.trim();
+}
+
+int getTotalDaysInThisMonth() {
+  // Get the current date
+  DateTime currentDate = DateTime.now();
+
+  // Get the last day of the current month
+  DateTime lastDayOfMonth =
+      DateTime(currentDate.year, currentDate.month + 1, 0);
+
+  // Extract the day component to get the total days in the current month
+  int totalDaysInThisMonth = lastDayOfMonth.day;
+
+  return totalDaysInThisMonth;
+}

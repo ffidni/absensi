@@ -6,12 +6,12 @@ part 'register_form_model.g.dart';
 @JsonSerializable()
 @CopyWith()
 class RegisterFormModel {
-  String? name;
+  String? nama;
   String? email;
   String? password;
 
   RegisterFormModel({
-    this.name,
+    this.nama,
     this.email,
     this.password,
   });

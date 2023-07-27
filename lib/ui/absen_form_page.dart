@@ -29,19 +29,19 @@ class _AbsenFormPageState extends State<AbsenFormPage> {
     UserModel(
       id: 1,
       email: "haikal@gmail.com",
-      name: "Haikal",
+      nama: "Haikal",
       tipeUser: "karyawan",
     ),
     UserModel(
       id: 2,
       email: "aldi@gmail.com",
-      name: "Aldi",
+      nama: "Aldi",
       tipeUser: "karyawan",
     ),
     UserModel(
       id: 3,
       email: "fitri@gmail.com",
-      name: "Fitri",
+      nama: "Fitri",
       tipeUser: "karyawan",
     ),
   ];

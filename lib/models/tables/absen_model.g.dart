@@ -11,9 +11,13 @@ abstract class _$AbsenModelCWProxy {
 
   AbsenModel userId(int? userId);
 
+  AbsenModel status(String? status);
+
   AbsenModel nama(String? nama);
 
   AbsenModel tipe(String? tipe);
+
+  AbsenModel telatWaktu(int? telatWaktu);
 
   AbsenModel tanggal(DateTime? tanggal);
 
@@ -26,8 +30,10 @@ abstract class _$AbsenModelCWProxy {
   AbsenModel call({
     int? id,
     int? userId,
+    String? status,
     String? nama,
     String? tipe,
+    int? telatWaktu,
     DateTime? tanggal,
   });
 }
@@ -45,10 +51,16 @@ class _$AbsenModelCWProxyImpl implements _$AbsenModelCWProxy {
   AbsenModel userId(int? userId) => this(userId: userId);
 
   @override
+  AbsenModel status(String? status) => this(status: status);
+
+  @override
   AbsenModel nama(String? nama) => this(nama: nama);
 
   @override
   AbsenModel tipe(String? tipe) => this(tipe: tipe);
+
+  @override
+  AbsenModel telatWaktu(int? telatWaktu) => this(telatWaktu: telatWaktu);
 
   @override
   AbsenModel tanggal(DateTime? tanggal) => this(tanggal: tanggal);
@@ -64,8 +76,10 @@ class _$AbsenModelCWProxyImpl implements _$AbsenModelCWProxy {
   AbsenModel call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
+    Object? status = const $CopyWithPlaceholder(),
     Object? nama = const $CopyWithPlaceholder(),
     Object? tipe = const $CopyWithPlaceholder(),
+    Object? telatWaktu = const $CopyWithPlaceholder(),
     Object? tanggal = const $CopyWithPlaceholder(),
   }) {
     return AbsenModel(
@@ -77,6 +91,10 @@ class _$AbsenModelCWProxyImpl implements _$AbsenModelCWProxy {
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as int?,
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
+          // ignore: cast_nullable_to_non_nullable
+          : status as String?,
       nama: nama == const $CopyWithPlaceholder()
           ? _value.nama
           // ignore: cast_nullable_to_non_nullable
@@ -85,6 +103,10 @@ class _$AbsenModelCWProxyImpl implements _$AbsenModelCWProxy {
           ? _value.tipe
           // ignore: cast_nullable_to_non_nullable
           : tipe as String?,
+      telatWaktu: telatWaktu == const $CopyWithPlaceholder()
+          ? _value.telatWaktu
+          // ignore: cast_nullable_to_non_nullable
+          : telatWaktu as int?,
       tanggal: tanggal == const $CopyWithPlaceholder()
           ? _value.tanggal
           // ignore: cast_nullable_to_non_nullable
@@ -106,8 +128,10 @@ extension $AbsenModelCopyWith on AbsenModel {
 AbsenModel _$AbsenModelFromJson(Map<String, dynamic> json) => AbsenModel(
       id: json['id'] as int?,
       userId: json['user_id'] as int?,
+      status: json['status'] as String?,
       nama: json['nama'] as String?,
       tipe: json['tipe'] as String?,
+      telatWaktu: json['telat_waktu'] as int?,
       tanggal: json['tanggal'] == null
           ? null
           : DateTime.parse(json['tanggal'] as String),
@@ -118,6 +142,8 @@ Map<String, dynamic> _$AbsenModelToJson(AbsenModel instance) =>
       'id': instance.id,
       'user_id': instance.userId,
       'nama': instance.nama,
+      'status': instance.status,
       'tipe': instance.tipe,
+      'telat_waktu': instance.telatWaktu,
       'tanggal': instance.tanggal?.toIso8601String(),
     };

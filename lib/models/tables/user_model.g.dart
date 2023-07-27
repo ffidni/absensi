@@ -9,13 +9,19 @@ part of 'user_model.dart';
 abstract class _$UserModelCWProxy {
   UserModel id(int? id);
 
-  UserModel name(String? name);
+  UserModel nama(String? nama);
 
   UserModel email(String? email);
 
   UserModel password(String? password);
 
   UserModel tipeUser(String? tipeUser);
+
+  UserModel token(String? token);
+
+  UserModel tokenExpiresIn(int? tokenExpiresIn);
+
+  UserModel tokenType(String? tokenType);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -25,10 +31,13 @@ abstract class _$UserModelCWProxy {
   /// ````
   UserModel call({
     int? id,
-    String? name,
+    String? nama,
     String? email,
     String? password,
     String? tipeUser,
+    String? token,
+    int? tokenExpiresIn,
+    String? tokenType,
   });
 }
 
@@ -42,7 +51,7 @@ class _$UserModelCWProxyImpl implements _$UserModelCWProxy {
   UserModel id(int? id) => this(id: id);
 
   @override
-  UserModel name(String? name) => this(name: name);
+  UserModel nama(String? nama) => this(nama: nama);
 
   @override
   UserModel email(String? email) => this(email: email);
@@ -54,6 +63,16 @@ class _$UserModelCWProxyImpl implements _$UserModelCWProxy {
   UserModel tipeUser(String? tipeUser) => this(tipeUser: tipeUser);
 
   @override
+  UserModel token(String? token) => this(token: token);
+
+  @override
+  UserModel tokenExpiresIn(int? tokenExpiresIn) =>
+      this(tokenExpiresIn: tokenExpiresIn);
+
+  @override
+  UserModel tokenType(String? tokenType) => this(tokenType: tokenType);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -63,20 +82,23 @@ class _$UserModelCWProxyImpl implements _$UserModelCWProxy {
   /// ````
   UserModel call({
     Object? id = const $CopyWithPlaceholder(),
-    Object? name = const $CopyWithPlaceholder(),
+    Object? nama = const $CopyWithPlaceholder(),
     Object? email = const $CopyWithPlaceholder(),
     Object? password = const $CopyWithPlaceholder(),
     Object? tipeUser = const $CopyWithPlaceholder(),
+    Object? token = const $CopyWithPlaceholder(),
+    Object? tokenExpiresIn = const $CopyWithPlaceholder(),
+    Object? tokenType = const $CopyWithPlaceholder(),
   }) {
     return UserModel(
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as int?,
-      name: name == const $CopyWithPlaceholder()
-          ? _value.name
+      nama: nama == const $CopyWithPlaceholder()
+          ? _value.nama
           // ignore: cast_nullable_to_non_nullable
-          : name as String?,
+          : nama as String?,
       email: email == const $CopyWithPlaceholder()
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
@@ -89,6 +111,18 @@ class _$UserModelCWProxyImpl implements _$UserModelCWProxy {
           ? _value.tipeUser
           // ignore: cast_nullable_to_non_nullable
           : tipeUser as String?,
+      token: token == const $CopyWithPlaceholder()
+          ? _value.token
+          // ignore: cast_nullable_to_non_nullable
+          : token as String?,
+      tokenExpiresIn: tokenExpiresIn == const $CopyWithPlaceholder()
+          ? _value.tokenExpiresIn
+          // ignore: cast_nullable_to_non_nullable
+          : tokenExpiresIn as int?,
+      tokenType: tokenType == const $CopyWithPlaceholder()
+          ? _value.tokenType
+          // ignore: cast_nullable_to_non_nullable
+          : tokenType as String?,
     );
   }
 }
@@ -105,16 +139,22 @@ extension $UserModelCopyWith on UserModel {
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       id: json['id'] as int?,
-      name: json['name'] as String?,
+      nama: json['nama'] as String?,
       email: json['email'] as String?,
       password: json['password'] as String?,
       tipeUser: json['tipe_user'] as String?,
+      token: json['token'] as String?,
+      tokenExpiresIn: json['token_expires_in'] as int?,
+      tokenType: json['token_type'] as String?,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'nama': instance.nama,
       'email': instance.email,
       'password': instance.password,
       'tipe_user': instance.tipeUser,
+      'token': instance.token,
+      'token_expires_in': instance.tokenExpiresIn,
+      'token_type': instance.tokenType,
     };

@@ -59,7 +59,7 @@ class _KaryawanFormPageState extends State<KaryawanFormPage> {
                       RoundedTitleInput(
                         title: "Nama Lengkap",
                         name: "Nama Lengkap",
-                        value: widget.user?.name ?? "",
+                        value: widget.user?.nama ?? "",
                         validators: [
                           Validatorless.required("Kolom ini harus diisi"),
                           Validatorless.min(2, "Minimal 2 karakter"),

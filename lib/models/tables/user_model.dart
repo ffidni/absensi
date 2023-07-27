@@ -7,18 +7,26 @@ part 'user_model.g.dart';
 @CopyWith()
 class UserModel {
   int? id;
-  String? name;
+  String? nama;
   String? email;
   String? password;
   @JsonKey(name: "tipe_user")
   String? tipeUser;
+  final String? token;
+  @JsonKey(name: 'token_expires_in')
+  final int? tokenExpiresIn;
+  @JsonKey(name: 'token_type')
+  final String? tokenType;
 
   UserModel({
     this.id,
-    this.name,
+    this.nama,
     this.email,
     this.password,
     this.tipeUser,
+    this.token,
+    this.tokenExpiresIn,
+    this.tokenType,
   });
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);

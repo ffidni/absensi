@@ -10,14 +10,19 @@ class AbsenModel {
   @JsonKey(name: "user_id")
   int? userId;
   String? nama;
+  String? status;
   String? tipe;
+  @JsonKey(name: "telat_waktu")
+  int? telatWaktu;
   DateTime? tanggal;
 
   AbsenModel({
     this.id,
     this.userId,
+    this.status,
     this.nama,
     this.tipe,
+    this.telatWaktu,
     this.tanggal,
   });
 

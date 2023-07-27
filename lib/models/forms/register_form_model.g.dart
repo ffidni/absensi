@@ -7,7 +7,7 @@ part of 'register_form_model.dart';
 // **************************************************************************
 
 abstract class _$RegisterFormModelCWProxy {
-  RegisterFormModel name(String? name);
+  RegisterFormModel nama(String? nama);
 
   RegisterFormModel email(String? email);
 
@@ -20,7 +20,7 @@ abstract class _$RegisterFormModelCWProxy {
   /// RegisterFormModel(...).copyWith(id: 12, name: "My name")
   /// ````
   RegisterFormModel call({
-    String? name,
+    String? nama,
     String? email,
     String? password,
   });
@@ -33,7 +33,7 @@ class _$RegisterFormModelCWProxyImpl implements _$RegisterFormModelCWProxy {
   final RegisterFormModel _value;
 
   @override
-  RegisterFormModel name(String? name) => this(name: name);
+  RegisterFormModel nama(String? nama) => this(nama: nama);
 
   @override
   RegisterFormModel email(String? email) => this(email: email);
@@ -50,15 +50,15 @@ class _$RegisterFormModelCWProxyImpl implements _$RegisterFormModelCWProxy {
   /// RegisterFormModel(...).copyWith(id: 12, name: "My name")
   /// ````
   RegisterFormModel call({
-    Object? name = const $CopyWithPlaceholder(),
+    Object? nama = const $CopyWithPlaceholder(),
     Object? email = const $CopyWithPlaceholder(),
     Object? password = const $CopyWithPlaceholder(),
   }) {
     return RegisterFormModel(
-      name: name == const $CopyWithPlaceholder()
-          ? _value.name
+      nama: nama == const $CopyWithPlaceholder()
+          ? _value.nama
           // ignore: cast_nullable_to_non_nullable
-          : name as String?,
+          : nama as String?,
       email: email == const $CopyWithPlaceholder()
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
@@ -84,14 +84,14 @@ extension $RegisterFormModelCopyWith on RegisterFormModel {
 
 RegisterFormModel _$RegisterFormModelFromJson(Map<String, dynamic> json) =>
     RegisterFormModel(
-      name: json['name'] as String?,
+      nama: json['nama'] as String?,
       email: json['email'] as String?,
       password: json['password'] as String?,
     );
 
 Map<String, dynamic> _$RegisterFormModelToJson(RegisterFormModel instance) =>
     <String, dynamic>{
-      'name': instance.name,
+      'nama': instance.nama,
       'email': instance.email,
       'password': instance.password,
     };

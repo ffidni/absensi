@@ -18,21 +18,32 @@ class _AbsenPageState extends State<AbsenPage> {
   List<AbsenModel> absenData = [
     AbsenModel(
       id: 1,
-      tipe: "masuk",
+      tipe: "Masuk",
       nama: "Haikal",
+      status: "Hadir",
       tanggal: DateTime.now(),
       userId: 1,
     ),
     AbsenModel(
       id: 2,
-      tipe: "keluar",
+      tipe: "Masuk",
       nama: "Aldi",
+      status: "Hadir",
+      telatWaktu: 30,
       tanggal: DateTime.now(),
       userId: 2,
     ),
     AbsenModel(
       id: 3,
-      tipe: "masuk",
+      tipe: "Masuk",
+      nama: "Fitri",
+      status: "Hadir",
+      tanggal: DateTime.now(),
+      userId: 3,
+    ),
+    AbsenModel(
+      id: 4,
+      tipe: "Keluar",
       nama: "Fitri",
       tanggal: DateTime.now(),
       userId: 3,
@@ -40,7 +51,7 @@ class _AbsenPageState extends State<AbsenPage> {
   ];
 
   _selectDate(BuildContext dialogContext) {
-    DatePicker.showDateTimePicker(
+    DatePicker.showDatePicker(
       context,
       showTitleActions: true,
       locale: LocaleType.id,
@@ -240,11 +251,23 @@ class _AbsenPageState extends State<AbsenPage> {
                       ),
                     ],
                   ),
+                  if (e.status != null)
+                    Row(
+                      children: [
+                        Text("Status : "),
+                        Text(
+                          "${e.status!} ${e.telatWaktu != null ? '(Telat ${convertMinutesToTimeFormat(e.telatWaktu!)})' : ''}",
+                          style: blackText.copyWith(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
                   Row(
                     children: [
                       Text("Absen : "),
                       Text(
-                        e.tipe!.toUpperCase(),
+                        e.tipe!,
                         style: blackText.copyWith(
                           fontSize: 16,
                         ),

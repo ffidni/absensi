@@ -1,3 +1,6 @@
+import 'package:absensi/blocs/absensi/absensi_bloc.dart';
+import 'package:absensi/blocs/auth/auth_bloc.dart';
+import 'package:absensi/models/page_fetchs/kehadiran_fetchs_model.dart';
 import 'package:absensi/models/tables/absen_model.dart';
 import 'package:absensi/models/tables/user_model.dart';
 import 'package:absensi/shared/shared_methods.dart';
@@ -5,6 +8,7 @@ import 'package:absensi/shared/theme.dart';
 import 'package:absensi/ui/absen_form_page.dart';
 import 'package:absensi/ui/karyawan_form_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
@@ -21,24 +25,29 @@ class _KaryawanPageState extends State<KaryawanPage> {
     UserModel(
       id: 1,
       email: "haikal@gmail.com",
-      name: "Haikal",
+      nama: "Haikal",
       tipeUser: "karyawan",
     ),
     UserModel(
       id: 2,
       email: "aldi@gmail.com",
-      name: "Aldi",
+      nama: "Aldi",
       tipeUser: "karyawan",
     ),
     UserModel(
       id: 3,
       email: "fitri@gmail.com",
-      name: "Fitri",
+      nama: "Fitri",
       tipeUser: "karyawan",
     ),
   ];
 
   void deleteUser() {}
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,27 +98,32 @@ class _KaryawanPageState extends State<KaryawanPage> {
             ),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 20,
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Container(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: dataKaryawan
+                          .map(
+                            (e) => buildKaryawanCard(e),
+                          )
+                          .toList(),
+                    )
+                  ],
+                ),
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  children: dataKaryawan
-                      .map(
-                        (e) => buildKaryawanCard(e),
-                      )
-                      .toList(),
-                )
-              ],
-            ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -181,7 +195,7 @@ class _KaryawanPageState extends State<KaryawanPage> {
                                 ),
                               ),
                               Text(
-                                "${e.name}",
+                                "${e.nama}",
                                 style: blackText.copyWith(
                                   fontSize: 18,
                                 ),

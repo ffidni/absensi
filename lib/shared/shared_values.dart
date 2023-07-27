@@ -16,12 +16,12 @@ List<Map<String, dynamic>> navigationList = [
   {
     "label": "Laporan Kehadiran",
     "icon": const Icon(Icons.report, size: 24),
-    "tipe_user": "user",
+    "tipe_user": "karyawan",
   },
   {
     "label": "Profile",
     "icon": const Icon(Icons.account_circle, size: 24),
-    "tipe_user": "user",
+    "tipe_user": "all",
   },
 ];
 
