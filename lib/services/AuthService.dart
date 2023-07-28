@@ -35,11 +35,16 @@ class AuthService {
     }
   }
 
-  Future<UserModel> register(RegisterFormModel data) async {
+  Future<UserModel> register(RegisterFormModel data,
+      {bool isAdmin = false}) async {
     try {
+      String url = "$apiBaseUrl/register";
+      if (!isAdmin) {
+        url += "?login=true";
+      }
       final res = await http
           .post(
-            Uri.parse("$apiBaseUrl/register"),
+            Uri.parse(url),
             body: data.toJson(),
           )
           .timeout(const Duration(seconds: 10));
@@ -54,7 +59,9 @@ class AuthService {
         );
       }
       final UserModel user = UserModel.fromJson(decodedBody['data']);
-      await storeCredential(user);
+      if (!isAdmin) {
+        await storeCredential(user);
+      }
       return user;
     } catch (e) {
       rethrow;

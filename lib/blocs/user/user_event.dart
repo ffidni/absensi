@@ -11,6 +11,15 @@ class GetAllKaryawan extends UserEvent {}
 
 class UserResetState extends UserEvent {}
 
+class UserCreate extends UserEvent {
+  final RegisterFormModel data;
+
+  const UserCreate(this.data);
+
+  @override
+  List<Object> get props => [data];
+}
+
 class UpdateUser extends UserEvent {
   final int userId;
   final RegisterFormModel data;

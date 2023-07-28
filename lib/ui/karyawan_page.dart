@@ -25,11 +25,37 @@ class _KaryawanPageState extends State<KaryawanPage> {
 
   List<UserModel> dataKaryawan = [];
 
-  void deleteUser() {}
+  void deleteUser() {
+    context.read<UserBloc>().add(DeleteUser(selectedIds));
+  }
 
   @override
   void initState() {
     super.initState();
+    getKaryawan();
+  }
+
+  void getKaryawan() {
+    context.read<UserBloc>().add(GetAllKaryawan());
+  }
+
+  void goToKaryawanForm({UserModel? user}) async {
+    // PersistentNavBarNavigator.pushNewScreen(
+    //   context,
+    //   screen: ,
+    //   pageTransitionAnimation: PageTransitionAnimation.sizeUp,
+    // );
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => KaryawanFormPage(user: user),
+      ),
+    );
+    refreshPage();
+  }
+
+  Future<void> refreshPage() async {
+    getKaryawan();
   }
 
   @override
@@ -39,10 +65,7 @@ class _KaryawanPageState extends State<KaryawanPage> {
         margin: const EdgeInsets.only(bottom: 30, right: 8),
         child: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          onPressed: () => PersistentNavBarNavigator.pushNewScreen(
-            context,
-            screen: KaryawanFormPage(),
-          ),
+          onPressed: goToKaryawanForm,
           child: const Icon(Icons.add,
               color: Color.fromARGB(255, 62, 62, 62), size: 32),
         ),
@@ -81,50 +104,58 @@ class _KaryawanPageState extends State<KaryawanPage> {
             ),
         ],
       ),
-      body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          return BlocConsumer<UserBloc, UserState>(
-            listener: (context, state) {
-              if (state is UserFailed) {
-                showSnackbar(context, state.error.message);
-              } else if (state is UserDeleteUserSuccess) {
-                showSnackbar(context, "Berhasil menghapus user");
-              }
-            },
-            builder: (context, state) {
-              if (state is UserGetKaryawanSuccess) {
-                dataKaryawan = state.karyawan;
-              }
-              return SafeArea(
-                child: SingleChildScrollView(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 20,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        dataKaryawan.isEmpty
-                            ? EmptyData(
-                                title: "Tidak ada karyawan",
-                                icon: Icons.not_interested_outlined,
-                              )
-                            : Column(
-                                children: dataKaryawan
-                                    .map(
-                                      (e) => buildKaryawanCard(e),
-                                    )
-                                    .toList(),
-                              )
-                      ],
-                    ),
+      body: RefreshIndicator(
+        onRefresh: refreshPage,
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            return BlocConsumer<UserBloc, UserState>(
+              listener: (context, state) {
+                if (state is UserFailed) {
+                  showSnackbar(context, state.error.message);
+                }
+              },
+              builder: (context, state) {
+                if (state is UserGetKaryawanSuccess) {
+                  dataKaryawan = state.karyawan;
+                }
+                return SafeArea(
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            state is UserLoading
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : dataKaryawan.isEmpty
+                                    ? EmptyData(
+                                        title: "Tidak ada karyawan",
+                                        icon: Icons.not_interested_outlined,
+                                      )
+                                    : Column(
+                                        children: dataKaryawan
+                                            .map(
+                                              (e) => buildKaryawanCard(e),
+                                            )
+                                            .toList(),
+                                      )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -137,20 +168,6 @@ class _KaryawanPageState extends State<KaryawanPage> {
         selectedIds.add(id);
       }
     });
-  }
-
-  void goToKaryawanForm({UserModel? user}) async {
-    // PersistentNavBarNavigator.pushNewScreen(
-    //   context,
-    //   screen: ,
-    //   pageTransitionAnimation: PageTransitionAnimation.sizeUp,
-    // );
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => KaryawanFormPage(user: user),
-      ),
-    );
   }
 
   Column buildKaryawanCard(UserModel e) {

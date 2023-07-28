@@ -46,7 +46,7 @@ Future<void> showSnackbar(BuildContext context, String message,
   await Flushbar(
     backgroundColor: isError ? redErrorColor : greenColor,
     message: message,
-    duration: Duration(seconds: 3),
+    duration: Duration(seconds: 2),
     flushbarPosition: FlushbarPosition.TOP,
   ).show(context);
 }
@@ -124,16 +124,12 @@ String convertMinutesToTimeFormat(int minutes) {
   return timeFormat.trim();
 }
 
-int getTotalDaysInThisMonth() {
+int getDayOfMonth() {
   // Get the current date
   DateTime currentDate = DateTime.now();
 
-  // Get the last day of the current month
-  DateTime lastDayOfMonth =
-      DateTime(currentDate.year, currentDate.month + 1, 0);
+  // Get the day of the month (1-31)
+  int dayOfMonth = currentDate.day;
 
-  // Extract the day component to get the total days in the current month
-  int totalDaysInThisMonth = lastDayOfMonth.day;
-
-  return totalDaysInThisMonth;
+  return dayOfMonth;
 }

@@ -42,10 +42,14 @@ class TabPage extends StatelessWidget {
 
   List<Widget> _buildScreens(AuthState state) {
     if (state is AuthSuccess) {
+      print(state.user.toJson());
       if (state.user.tipeUser == "admin") {
         return [AbsenPage(), KaryawanPage(), ProfilePage()];
       }
-      return [KehadiranPage(), ProfilePage()];
+      return [
+        KehadiranPage(),
+        ProfilePage(),
+      ];
     }
     return [];
   }

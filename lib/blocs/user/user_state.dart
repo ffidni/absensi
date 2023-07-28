@@ -13,6 +13,15 @@ class UserLoading extends UserState {}
 
 class UserUpdateUserByAdminSuccess extends UserState {}
 
+class UserCreateSuccess extends UserState {
+  final UserModel user;
+
+  const UserCreateSuccess(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
+
 class UserDeleteUserSuccess extends UserState {}
 
 class UserGetKaryawanSuccess extends UserState {

@@ -21,8 +21,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           await _handleDeleteUser(event.ids, emit);
         } else if (event is GetAllKaryawan) {
           await _handleGetAllKaryawan(emit);
-        } else if (event is UserResetState) {
-          emit(UserLoading());
+        } else if (event is UserCreate) {
+          await _handleCreate(event.data, emit);
         }
       } catch (e) {
         emit(UserFailed(ErrorException(e.toString())));
@@ -39,6 +39,12 @@ Future<void> _handleGetAllKaryawan(Emitter<UserState> emit) async {
   } catch (e) {
     rethrow;
   }
+}
+
+Future<void> _handleCreate(RegisterFormModel data, Emitter<UserState> emit,
+    {bool admin = false}) async {
+  final UserModel user = await AuthService().register(data, isAdmin: true);
+  emit(UserCreateSuccess(user));
 }
 
 Future<void> _handleUpdateUser(

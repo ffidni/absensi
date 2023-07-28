@@ -63,6 +63,7 @@ class _AbsenPageState extends State<AbsenPage> {
         builder: (context) => AbsenFormPage(absen: absen),
       ),
     );
+    refreshPage();
   }
 
   void resetSelected() {
@@ -74,6 +75,10 @@ class _AbsenPageState extends State<AbsenPage> {
   @override
   void initState() {
     super.initState();
+    getAbsenData();
+  }
+
+  Future<void> refreshPage() async {
     getAbsenData();
   }
 
@@ -127,7 +132,7 @@ class _AbsenPageState extends State<AbsenPage> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: getAbsenData,
+        onRefresh: refreshPage,
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             return BlocConsumer<AbsensiBloc, AbsensiState>(
@@ -144,70 +149,76 @@ class _AbsenPageState extends State<AbsenPage> {
                   absenData = state.absenData;
                 }
                 return SafeArea(
-                  child: SingleChildScrollView(
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 20,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 10),
-                          Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Tanggal",
-                                  style: blackText.copyWith(
-                                    fontSize: 14,
-                                    fontWeight: medium,
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 10),
+                            Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Tanggal",
+                                    style: blackText.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: medium,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                GestureDetector(
-                                  onTap: () => _selectDate(context),
-                                  child: Container(
-                                    padding: EdgeInsets.all(12),
-                                    width: 327,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(14),
-                                      color: whiteColor,
-                                      border: Border.all(
-                                        width: 2,
-                                        color: greyColor,
+                                  const SizedBox(height: 8),
+                                  GestureDetector(
+                                    onTap: () => _selectDate(context),
+                                    child: Container(
+                                      padding: EdgeInsets.all(12),
+                                      width: 327,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        color: whiteColor,
+                                        border: Border.all(
+                                          width: 2,
+                                          color: greyColor,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            formatIndonesianDate(date),
+                                          ),
+                                          Spacer(),
+                                          const Icon(Icons.calendar_today,
+                                              size: 26),
+                                        ],
                                       ),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          formatIndonesianDate(date),
-                                        ),
-                                        Spacer(),
-                                        const Icon(Icons.calendar_today,
-                                            size: 26),
-                                      ],
-                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          absenData.isEmpty
-                              ? EmptyData(
-                                  title: "Tidak ada absen pada tanggal ini",
-                                  icon: Icons.not_interested_outlined,
-                                )
-                              : Column(
-                                  children: absenData
-                                      .map((e) => buildAbsenCard(e))
-                                      .toList(),
-                                )
-                        ],
+                            const SizedBox(height: 20),
+                            state is AbsensiLoading
+                                ? Center(child: CircularProgressIndicator())
+                                : absenData.isEmpty
+                                    ? EmptyData(
+                                        title:
+                                            "Tidak ada absen pada tanggal ini",
+                                        icon: Icons.not_interested_outlined,
+                                      )
+                                    : Column(
+                                        children: absenData
+                                            .map((e) => buildAbsenCard(e))
+                                            .toList(),
+                                      )
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 );
               },
