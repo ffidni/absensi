@@ -11,10 +11,12 @@ import "package:absensi/shared/shared_values.dart";
 class AuthService {
   Future<UserModel> login(LoginFormModel data) async {
     try {
-      final res = await http.post(
-        Uri.parse("$apiBaseUrl/login"),
-        body: data.toJson(),
-      );
+      final res = await http
+          .post(
+            Uri.parse("$apiBaseUrl/login"),
+            body: data.toJson(),
+          )
+          .timeout(const Duration(seconds: 10));
       final decodedBody = jsonDecode(res.body);
       if (res.statusCode >= 300) {
         throw ErrorException(
@@ -102,7 +104,7 @@ class AuthService {
       final res = await http.get(
         Uri.parse("$apiBaseUrl/karyawan"),
         headers: {"Authorization": token},
-      );
+      ).timeout(const Duration(seconds: 10));
 
       final decodedBody = jsonDecode(res.body);
 
@@ -219,7 +221,7 @@ class AuthService {
       final res = await http.get(
         Uri.parse("$apiBaseUrl/get-user-by-token"),
         headers: {"Authorization": token},
-      );
+      ).timeout(const Duration(seconds: 10));
 
       final decodedBody = jsonDecode(res.body);
 
@@ -243,7 +245,7 @@ class AuthService {
       final res = await http.post(
         Uri.parse("$apiBaseUrl/logout"),
         headers: {"Authorization": token},
-      );
+      ).timeout(const Duration(seconds: 10));
       final decodedBody = jsonDecode(res.body);
       if (res.statusCode >= 300) {
         throw ErrorException(

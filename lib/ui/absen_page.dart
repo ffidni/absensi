@@ -243,7 +243,7 @@ class _AbsenPageState extends State<AbsenPage> {
                 ? setSelectedAbsen(e.id!)
                 : goToAbsenForm(absen: e),
             child: Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width * 0.87,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),

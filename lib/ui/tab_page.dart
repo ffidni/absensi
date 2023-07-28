@@ -95,7 +95,7 @@ class TabPage extends StatelessWidget {
                           CircularProgressIndicator(),
                           const SizedBox(height: 8),
                           Text(
-                            "Mengubah data",
+                            "Logging out",
                             style: blackText.copyWith(fontSize: 22),
                           ),
                         ],

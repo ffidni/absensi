@@ -1,3 +1,5 @@
+import 'dart:async';
+
 class ErrorException implements Exception {
   final String message;
   final int? statusCode;

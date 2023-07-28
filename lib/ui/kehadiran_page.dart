@@ -296,7 +296,7 @@ class _KehadiranPageState extends State<KehadiranPage> {
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
             child: Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width * 0.9,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),

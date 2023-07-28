@@ -24,7 +24,7 @@ class AbsensiService {
       final res = await http.get(
         Uri.parse(url),
         headers: {"Authorization": token},
-      );
+      ).timeout(const Duration(seconds: 10));
       final decodedBody = jsonDecode(res.body);
       if (res.statusCode >= 300) throw ErrorException(decodedBody['messages']);
       return List.from(decodedBody['data'])
@@ -41,7 +41,7 @@ class AbsensiService {
       final res = await http.get(
         Uri.parse("$apiBaseUrl/laporan-kehadiran/$userId"),
         headers: {"Authorization": token},
-      );
+      ).timeout(const Duration(seconds: 10));
       final decodedBody = jsonDecode(res.body);
       if (res.statusCode >= 300) {
         throw ErrorException(
@@ -63,7 +63,7 @@ class AbsensiService {
         Uri.parse("$apiBaseUrl/absensi"),
         body: data.toJson(),
         headers: {"Authorization": token},
-      );
+      ).timeout(const Duration(seconds: 10));
       final decodedBody = jsonDecode(res.body);
       if (res.statusCode >= 300) {
         throw ErrorException(
@@ -84,7 +84,7 @@ class AbsensiService {
         Uri.parse("$apiBaseUrl/absensi/$id"),
         body: data.toJson(),
         headers: {"Authorization": token},
-      );
+      ).timeout(const Duration(seconds: 10));
       final decodedBody = jsonDecode(res.body);
       if (res.statusCode >= 300) {
         throw ErrorException(
@@ -104,7 +104,7 @@ class AbsensiService {
       final res = await http.delete(
         Uri.parse("$apiBaseUrl/absensi/$id"),
         headers: {"Authorization": token},
-      );
+      ).timeout(const Duration(seconds: 10));
       final decodedBody = jsonDecode(res.body);
       if (res.statusCode >= 300) {
         throw ErrorException(
