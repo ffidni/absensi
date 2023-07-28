@@ -1,3 +1,4 @@
+import "package:absensi/models/tables/user_model.dart";
 import "package:json_annotation/json_annotation.dart";
 import "package:copy_with_extension/copy_with_extension.dart";
 
@@ -9,7 +10,7 @@ class AbsenModel {
   int? id;
   @JsonKey(name: "user_id")
   int? userId;
-  String? nama;
+  UserModel? user;
   String? status;
   String? tipe;
   @JsonKey(name: "telat_waktu")
@@ -20,7 +21,7 @@ class AbsenModel {
     this.id,
     this.userId,
     this.status,
-    this.nama,
+    this.user,
     this.tipe,
     this.telatWaktu,
     this.tanggal,

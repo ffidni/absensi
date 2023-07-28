@@ -5,6 +5,7 @@ import 'package:absensi/models/tables/absen_model.dart';
 import 'package:absensi/shared/shared_methods.dart';
 import 'package:absensi/shared/theme.dart';
 import 'package:absensi/ui/absen_form_page.dart';
+import 'package:absensi/widgets/EmptyData.dart';
 import 'package:absensi/widgets/TitleText.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,10 @@ class _KehadiranPageState extends State<KehadiranPage> {
   @override
   void initState() {
     super.initState();
+    getLaporan();
+  }
+
+  void getLaporan() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthSuccess) {
       context
@@ -56,6 +61,11 @@ class _KehadiranPageState extends State<KehadiranPage> {
     }
   }
 
+  Future<void> refreshData() async {
+    getLaporan();
+    getAbsenData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,153 +78,165 @@ class _KehadiranPageState extends State<KehadiranPage> {
           ),
         ),
       ),
-      body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          return BlocConsumer<AbsensiBloc, AbsensiState>(
-            listener: (context, state) {
-              if (state is AbsensiFailed) {
-                showSnackbar(context, state.error.message);
-              }
-            },
-            builder: (context, state) {
-              if (state is AbsensiGetLaporanSuccess) {
-                laporan = state.laporan;
-                print(laporan!.toJson());
-              } else if (state is AbsensiGetAllSuccess) {
-                if (laporan != null) {
-                  laporan!.absenData = state.absenData;
+      body: RefreshIndicator(
+        onRefresh: refreshData,
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            return BlocConsumer<AbsensiBloc, AbsensiState>(
+              listener: (context, state) {
+                if (state is AbsensiFailed) {
+                  showSnackbar(context, state.error.message);
                 }
-              }
-              return SafeArea(
-                child: SingleChildScrollView(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 20,
-                    ),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TitleText(text: "Laporan Bulan Ini"),
-                            Wrap(
-                              spacing: 12,
-                              children: [
-                                buildCount(
-                                    laporan?.hadirCountThisMonth?.toString() ??
-                                        "0",
-                                    "Hadir",
-                                    greenColor),
-                                buildCount(
-                                    laporan?.izinCountThisMonth?.toString() ??
-                                        "0",
-                                    "Izin",
-                                    yellowColor),
-                                buildCount(
-                                  laporan != null
-                                      ? (getTotalDaysInThisMonth() -
-                                              (laporan!.hadirCountThisMonth! +
-                                                  laporan!.izinCountThisMonth!))
-                                          .toString()
-                                      : "0",
-                                  "Absen",
-                                  redErrorColor,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TitleText(text: "Laporan Minggu Ini"),
-                            Wrap(
-                              spacing: 12,
-                              children: [
-                                buildCount(
-                                    laporan?.hadirCountThisWeek?.toString() ??
-                                        "0",
-                                    "Hadir",
-                                    greenColor),
-                                buildCount(
-                                    laporan?.izinCountThisWeek?.toString() ??
-                                        "0",
-                                    "Izin",
-                                    yellowColor),
-                                buildCount(
-                                  laporan != null
-                                      ? (6 -
-                                              (laporan!.hadirCountThisWeek! +
-                                                  laporan!.izinCountThisWeek!))
-                                          .toString()
-                                      : "0",
-                                  "Absen",
-                                  redErrorColor,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 40),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TitleText(text: "Absen Hari Ini"),
-                            const SizedBox(height: 5),
-                            Text(
-                              "Tanggal",
-                              style: blackText.copyWith(
-                                fontSize: 14,
-                                fontWeight: medium,
+              },
+              builder: (context, state) {
+                if (state is AbsensiGetLaporanSuccess) {
+                  laporan = state.laporan;
+                  print(laporan!.toJson());
+                } else if (state is AbsensiGetAllSuccess) {
+                  if (laporan != null) {
+                    laporan!.absenData = state.absenData;
+                  }
+                }
+                return SafeArea(
+                  child: SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 20,
+                      ),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TitleText(text: "Laporan Bulan Ini"),
+                              Wrap(
+                                spacing: 12,
+                                children: [
+                                  buildCount(
+                                      laporan?.hadirCountThisMonth
+                                              ?.toString() ??
+                                          "0",
+                                      "Hadir",
+                                      greenColor),
+                                  buildCount(
+                                      laporan?.izinCountThisMonth?.toString() ??
+                                          "0",
+                                      "Izin",
+                                      yellowColor),
+                                  buildCount(
+                                    laporan != null
+                                        ? (getTotalDaysInThisMonth() -
+                                                (laporan!.hadirCountThisMonth! +
+                                                    laporan!
+                                                        .izinCountThisMonth!))
+                                            .toString()
+                                        : "0",
+                                    "Absen",
+                                    redErrorColor,
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            GestureDetector(
-                              onTap: () => _selectDate(context),
-                              child: Container(
-                                padding: EdgeInsets.all(12),
-                                width: 327,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  color: whiteColor,
-                                  border: Border.all(
-                                    width: 2,
-                                    color: greyColor,
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TitleText(text: "Laporan Minggu Ini"),
+                              Wrap(
+                                spacing: 12,
+                                children: [
+                                  buildCount(
+                                      laporan?.hadirCountThisWeek?.toString() ??
+                                          "0",
+                                      "Hadir",
+                                      greenColor),
+                                  buildCount(
+                                      laporan?.izinCountThisWeek?.toString() ??
+                                          "0",
+                                      "Izin",
+                                      yellowColor),
+                                  buildCount(
+                                    laporan != null
+                                        ? (6 -
+                                                (laporan!.hadirCountThisWeek! +
+                                                    laporan!
+                                                        .izinCountThisWeek!))
+                                            .toString()
+                                        : "0",
+                                    "Absen",
+                                    redErrorColor,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 40),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TitleText(text: "Absen Hari Ini"),
+                              const SizedBox(height: 5),
+                              Text(
+                                "Tanggal",
+                                style: blackText.copyWith(
+                                  fontSize: 14,
+                                  fontWeight: medium,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              GestureDetector(
+                                onTap: () => _selectDate(context),
+                                child: Container(
+                                  padding: EdgeInsets.all(12),
+                                  width: 327,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: whiteColor,
+                                    border: Border.all(
+                                      width: 2,
+                                      color: greyColor,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        formatIndonesianDate(date),
+                                      ),
+                                      Spacer(),
+                                      const Icon(Icons.calendar_today,
+                                          size: 26),
+                                    ],
                                   ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      formatIndonesianDate(date),
-                                    ),
-                                    Spacer(),
-                                    const Icon(Icons.calendar_today, size: 26),
-                                  ],
-                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        if (laporan != null && laporan!.absenData != null)
-                          Column(
-                            children: laporan!.absenData!
-                                .map(
-                                  (e) => buildAbsenCard(e),
-                                )
-                                .toList(),
-                          )
-                      ],
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          if (laporan != null && laporan!.absenData != null)
+                            laporan!.absenData!.isEmpty
+                                ? EmptyData(
+                                    title: "Tidak ada absen pada tanggal ini",
+                                    icon: Icons.not_interested_outlined,
+                                  )
+                                : Column(
+                                    children: laporan!.absenData!
+                                        .map(
+                                          (e) => buildAbsenCard(e),
+                                        )
+                                        .toList(),
+                                  )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          );
-        },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -289,9 +311,9 @@ class _KehadiranPageState extends State<KehadiranPage> {
                   Row(
                     children: [
                       Text(
-                        e.nama ?? "",
+                        e.user?.nama ?? "",
                         style: blackText.copyWith(
-                          fontSize: 18,
+                          fontSize: 16,
                         ),
                       ),
                     ],

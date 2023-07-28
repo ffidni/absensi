@@ -29,7 +29,12 @@ class AbsensiGetLaporanSuccess extends AbsensiState {
   List<Object> get props => [laporan];
 }
 
-class AbsensiSuccess extends AbsensiState {}
+class AbsensiSuccess extends AbsensiState {
+  final String message;
+  const AbsensiSuccess(this.message);
+  @override
+  List<Object> get props => [message];
+}
 
 class AbsensiFailed extends AbsensiState {
   final ErrorException error;

@@ -67,8 +67,12 @@ String formatDateAndTime(String datetime) {
   return "${days[parsedDatetime.weekday - 1]}, ${formatIndonesianDate(parsedDatetime)} ${formattedTime}";
 }
 
-String? getFormText(GlobalKey<FormBuilderState> key, String name) {
-  return key.currentState!.fields[name]!.value?.toString() ?? '';
+dynamic getFormText(GlobalKey<FormBuilderState> key, String name,
+    {toString = true}) {
+  if (toString) {
+    return key.currentState!.fields[name]!.value?.toString() ?? '';
+  }
+  return key.currentState!.fields[name]!.value;
 }
 
 void updateFormText(

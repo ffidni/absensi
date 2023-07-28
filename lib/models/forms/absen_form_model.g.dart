@@ -11,6 +11,10 @@ abstract class _$AbsenFormModelCWProxy {
 
   AbsenFormModel tipe(String? tipe);
 
+  AbsenFormModel tanggal(String? tanggal);
+
+  AbsenFormModel status(String? status);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AbsenFormModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -20,6 +24,8 @@ abstract class _$AbsenFormModelCWProxy {
   AbsenFormModel call({
     String? userId,
     String? tipe,
+    String? tanggal,
+    String? status,
   });
 }
 
@@ -36,6 +42,12 @@ class _$AbsenFormModelCWProxyImpl implements _$AbsenFormModelCWProxy {
   AbsenFormModel tipe(String? tipe) => this(tipe: tipe);
 
   @override
+  AbsenFormModel tanggal(String? tanggal) => this(tanggal: tanggal);
+
+  @override
+  AbsenFormModel status(String? status) => this(status: status);
+
+  @override
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AbsenFormModel(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -46,6 +58,8 @@ class _$AbsenFormModelCWProxyImpl implements _$AbsenFormModelCWProxy {
   AbsenFormModel call({
     Object? userId = const $CopyWithPlaceholder(),
     Object? tipe = const $CopyWithPlaceholder(),
+    Object? tanggal = const $CopyWithPlaceholder(),
+    Object? status = const $CopyWithPlaceholder(),
   }) {
     return AbsenFormModel(
       userId: userId == const $CopyWithPlaceholder()
@@ -56,6 +70,14 @@ class _$AbsenFormModelCWProxyImpl implements _$AbsenFormModelCWProxy {
           ? _value.tipe
           // ignore: cast_nullable_to_non_nullable
           : tipe as String?,
+      tanggal: tanggal == const $CopyWithPlaceholder()
+          ? _value.tanggal
+          // ignore: cast_nullable_to_non_nullable
+          : tanggal as String?,
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
+          // ignore: cast_nullable_to_non_nullable
+          : status as String?,
     );
   }
 }
@@ -74,10 +96,14 @@ AbsenFormModel _$AbsenFormModelFromJson(Map<String, dynamic> json) =>
     AbsenFormModel(
       userId: json['user_id'] as String?,
       tipe: json['tipe'] as String?,
+      tanggal: json['tanggal'] as String?,
+      status: json['status'] as String?,
     );
 
 Map<String, dynamic> _$AbsenFormModelToJson(AbsenFormModel instance) =>
     <String, dynamic>{
       'user_id': instance.userId,
       'tipe': instance.tipe,
+      'tanggal': instance.tanggal,
+      'status': instance.status,
     };

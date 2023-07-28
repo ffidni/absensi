@@ -35,6 +35,7 @@ class _RegisterPageState extends State<LoginPage> {
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
+          print(state);
           if (state is AuthSuccess) {
             Navigator.pushNamedAndRemoveUntil(
                 context, "/tab", (route) => false);

@@ -1,3 +1,4 @@
+import 'package:absensi/models/forms/absen_form_model.dart';
 import 'package:absensi/models/page_fetchs/kehadiran_fetchs_model.dart';
 import 'package:absensi/models/tables/absen_model.dart';
 import 'package:absensi/services/AbsensiService.dart';
@@ -22,8 +23,10 @@ class AbsensiBloc extends Bloc<AbsensiEvent, AbsensiState> {
           await _handleGetAll(emit, date: event.date, userId: event.userId);
         } else if (event is AbsensiGetLaporanKehadiran) {
           await _handleGetLaporan(event.userId, emit);
+        } else if (event is AbsensiAdd) {
+          await _handleAdd(event.absenForm, emit);
         } else if (event is AbsensiEdit) {
-          await _handleEdit(event.id, emit);
+          await _handleEdit(event.id, event.absenForm, emit);
         } else if (event is AbsensiDelete) {
           await _handleDelete(event.id, emit);
         }
@@ -50,12 +53,20 @@ Future<void> _handleGetLaporan(int userId, Emitter<AbsensiState> emit) async {
   emit(AbsensiGetLaporanSuccess(data));
 }
 
-Future<void> _handleEdit(int id, Emitter<AbsensiState> emit) async {
-  await AbsensiService().getLaporanKehadiran(id);
-  emit(AbsensiSuccess());
+Future<void> _handleAdd(AbsenFormModel data, Emitter<AbsensiState> emit) async {
+  await AbsensiService().addAbsen(data);
+  emit(AbsensiSuccess("Berhasil menambah data absen"));
 }
 
-Future<void> _handleDelete(int id, Emitter<AbsensiState> emit) async {
-  await AbsensiService().getLaporanKehadiran(id);
-  emit(AbsensiSuccess());
+Future<void> _handleEdit(
+    int id, AbsenFormModel data, Emitter<AbsensiState> emit) async {
+  await AbsensiService().editAbsen(id, data);
+  emit(AbsensiSuccess("Berhasil merubah data absen"));
+}
+
+Future<void> _handleDelete(List<int> ids, Emitter<AbsensiState> emit) async {
+  for (var id in ids) {
+    await AbsensiService().deleteAbsen(id);
+  }
+  emit(AbsensiSuccess("Berhasil menghapus data absen"));
 }

@@ -33,4 +33,12 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserModel && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

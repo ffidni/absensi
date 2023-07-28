@@ -1,10 +1,14 @@
+import 'package:absensi/widgets/EmptyData.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:absensi/blocs/absensi/absensi_bloc.dart';
+import 'package:absensi/blocs/auth/auth_bloc.dart';
 import 'package:absensi/models/tables/absen_model.dart';
 import 'package:absensi/shared/shared_methods.dart';
 import 'package:absensi/shared/theme.dart';
 import 'package:absensi/ui/absen_form_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class AbsenPage extends StatefulWidget {
   @override
@@ -15,40 +19,7 @@ class _AbsenPageState extends State<AbsenPage> {
   DateTime date = DateTime.now();
   List<int> selectedIds = [];
 
-  List<AbsenModel> absenData = [
-    AbsenModel(
-      id: 1,
-      tipe: "Masuk",
-      nama: "Haikal",
-      status: "Hadir",
-      tanggal: DateTime.now(),
-      userId: 1,
-    ),
-    AbsenModel(
-      id: 2,
-      tipe: "Masuk",
-      nama: "Aldi",
-      status: "Hadir",
-      telatWaktu: 30,
-      tanggal: DateTime.now(),
-      userId: 2,
-    ),
-    AbsenModel(
-      id: 3,
-      tipe: "Masuk",
-      nama: "Fitri",
-      status: "Hadir",
-      tanggal: DateTime.now(),
-      userId: 3,
-    ),
-    AbsenModel(
-      id: 4,
-      tipe: "Keluar",
-      nama: "Fitri",
-      tanggal: DateTime.now(),
-      userId: 3,
-    ),
-  ];
+  List<AbsenModel> absenData = [];
 
   _selectDate(BuildContext dialogContext) {
     DatePicker.showDatePicker(
@@ -61,11 +32,19 @@ class _AbsenPageState extends State<AbsenPage> {
         setState(() {
           date = time;
         });
+        getAbsenData();
       },
     );
   }
 
-  void deleteAbsen() {}
+  Future<void> getAbsenData() async {
+    context.read<AbsensiBloc>().add(AbsensiGetAllByDate(date.toString()));
+    resetSelected();
+  }
+
+  void deleteAbsen() {
+    context.read<AbsensiBloc>().add(AbsensiDelete(selectedIds));
+  }
 
   void setSelectedAbsen(int id) {
     setState(() {
@@ -78,17 +57,24 @@ class _AbsenPageState extends State<AbsenPage> {
   }
 
   void goToAbsenForm({AbsenModel? absen}) async {
-    // PersistentNavBarNavigator.pushNewScreen(
-    //   context,
-    //   screen: ,
-    //   pageTransitionAnimation: PageTransitionAnimation.sizeUp,
-    // );
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AbsenFormPage(absen: absen),
       ),
     );
+  }
+
+  void resetSelected() {
+    setState(() {
+      selectedIds = [];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getAbsenData();
   }
 
   @override
@@ -140,67 +126,93 @@ class _AbsenPageState extends State<AbsenPage> {
             ),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 20,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Tanggal",
-                        style: blackText.copyWith(
-                          fontSize: 14,
-                          fontWeight: medium,
-                        ),
+      body: RefreshIndicator(
+        onRefresh: getAbsenData,
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            return BlocConsumer<AbsensiBloc, AbsensiState>(
+              listener: (context, state) {
+                if (state is AbsensiFailed) {
+                  showSnackbar(context, state.error.message);
+                } else if (state is AbsensiSuccess) {
+                  showSnackbar(context, state.message, isError: false);
+                  getAbsenData();
+                }
+              },
+              builder: (context, state) {
+                if (state is AbsensiGetAllSuccess) {
+                  absenData = state.absenData;
+                }
+                return SafeArea(
+                  child: SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 20,
                       ),
-                      const SizedBox(height: 8),
-                      GestureDetector(
-                        onTap: () => _selectDate(context),
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                          width: 327,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            color: whiteColor,
-                            border: Border.all(
-                              width: 2,
-                              color: greyColor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Tanggal",
+                                  style: blackText.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: medium,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                GestureDetector(
+                                  onTap: () => _selectDate(context),
+                                  child: Container(
+                                    padding: EdgeInsets.all(12),
+                                    width: 327,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: whiteColor,
+                                      border: Border.all(
+                                        width: 2,
+                                        color: greyColor,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          formatIndonesianDate(date),
+                                        ),
+                                        Spacer(),
+                                        const Icon(Icons.calendar_today,
+                                            size: 26),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Text(
-                                formatIndonesianDate(date),
-                              ),
-                              Spacer(),
-                              const Icon(Icons.calendar_today, size: 26),
-                            ],
-                          ),
-                        ),
+                          const SizedBox(height: 20),
+                          absenData.isEmpty
+                              ? EmptyData(
+                                  title: "Tidak ada absen pada tanggal ini",
+                                  icon: Icons.not_interested_outlined,
+                                )
+                              : Column(
+                                  children: absenData
+                                      .map((e) => buildAbsenCard(e))
+                                      .toList(),
+                                )
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  children: absenData
-                      .map(
-                        (e) => buildAbsenCard(e),
-                      )
-                      .toList(),
-                )
-              ],
-            ),
-          ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -236,7 +248,9 @@ class _AbsenPageState extends State<AbsenPage> {
                   Row(
                     children: [
                       Text(
-                        formatIndonesianDate(e.tanggal!),
+                        formatIndonesianDate(e.tanggal ??
+                            DateTime
+                                .now()), // Use null-aware operator (??) to handle null values
                       ),
                     ],
                   ),
@@ -244,9 +258,10 @@ class _AbsenPageState extends State<AbsenPage> {
                   Row(
                     children: [
                       Text(
-                        e.nama!,
+                        e.user?.nama ??
+                            '', // Use null-aware operator (??) to handle null values
                         style: blackText.copyWith(
-                          fontSize: 18,
+                          fontSize: 16,
                         ),
                       ),
                     ],
@@ -267,7 +282,8 @@ class _AbsenPageState extends State<AbsenPage> {
                     children: [
                       Text("Absen : "),
                       Text(
-                        e.tipe!,
+                        e.tipe ??
+                            '', // Use null-aware operator (??) to handle null values
                         style: blackText.copyWith(
                           fontSize: 16,
                         ),

@@ -18,12 +18,26 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         } else if (event is UpdateUserByAdmin) {
           await _handleUpdateUser(event.userId, event.data, emit, admin: true);
         } else if (event is DeleteUser) {
-          await _handleDeleteUser(event.userId, emit);
+          await _handleDeleteUser(event.ids, emit);
+        } else if (event is GetAllKaryawan) {
+          await _handleGetAllKaryawan(emit);
+        } else if (event is UserResetState) {
+          emit(UserLoading());
         }
       } catch (e) {
         emit(UserFailed(ErrorException(e.toString())));
       }
     });
+  }
+}
+
+Future<void> _handleGetAllKaryawan(Emitter<UserState> emit) async {
+  try {
+    final List<UserModel> karyawan = await AuthService().getAllKaryawan();
+
+    emit(UserGetKaryawanSuccess(karyawan));
+  } catch (e) {
+    rethrow;
   }
 }
 
@@ -35,7 +49,9 @@ Future<void> _handleUpdateUser(
   emit(admin ? UserUpdateUserByAdminSuccess() : UserUpdateUserSuccess(user));
 }
 
-Future<void> _handleDeleteUser(int id, Emitter<UserState> emit) async {
-  await AuthService().deleteUser(id);
+Future<void> _handleDeleteUser(List<int> ids, Emitter<UserState> emit) async {
+  for (var id in ids) {
+    await AuthService().deleteUser(id);
+  }
   emit(UserDeleteUserSuccess());
 }

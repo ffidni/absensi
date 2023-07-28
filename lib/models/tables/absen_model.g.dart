@@ -13,7 +13,7 @@ abstract class _$AbsenModelCWProxy {
 
   AbsenModel status(String? status);
 
-  AbsenModel nama(String? nama);
+  AbsenModel user(UserModel? user);
 
   AbsenModel tipe(String? tipe);
 
@@ -31,7 +31,7 @@ abstract class _$AbsenModelCWProxy {
     int? id,
     int? userId,
     String? status,
-    String? nama,
+    UserModel? user,
     String? tipe,
     int? telatWaktu,
     DateTime? tanggal,
@@ -54,7 +54,7 @@ class _$AbsenModelCWProxyImpl implements _$AbsenModelCWProxy {
   AbsenModel status(String? status) => this(status: status);
 
   @override
-  AbsenModel nama(String? nama) => this(nama: nama);
+  AbsenModel user(UserModel? user) => this(user: user);
 
   @override
   AbsenModel tipe(String? tipe) => this(tipe: tipe);
@@ -77,7 +77,7 @@ class _$AbsenModelCWProxyImpl implements _$AbsenModelCWProxy {
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
     Object? status = const $CopyWithPlaceholder(),
-    Object? nama = const $CopyWithPlaceholder(),
+    Object? user = const $CopyWithPlaceholder(),
     Object? tipe = const $CopyWithPlaceholder(),
     Object? telatWaktu = const $CopyWithPlaceholder(),
     Object? tanggal = const $CopyWithPlaceholder(),
@@ -95,10 +95,10 @@ class _$AbsenModelCWProxyImpl implements _$AbsenModelCWProxy {
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as String?,
-      nama: nama == const $CopyWithPlaceholder()
-          ? _value.nama
+      user: user == const $CopyWithPlaceholder()
+          ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : nama as String?,
+          : user as UserModel?,
       tipe: tipe == const $CopyWithPlaceholder()
           ? _value.tipe
           // ignore: cast_nullable_to_non_nullable
@@ -129,7 +129,9 @@ AbsenModel _$AbsenModelFromJson(Map<String, dynamic> json) => AbsenModel(
       id: json['id'] as int?,
       userId: json['user_id'] as int?,
       status: json['status'] as String?,
-      nama: json['nama'] as String?,
+      user: json['user'] == null
+          ? null
+          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
       tipe: json['tipe'] as String?,
       telatWaktu: json['telat_waktu'] as int?,
       tanggal: json['tanggal'] == null
@@ -141,7 +143,7 @@ Map<String, dynamic> _$AbsenModelToJson(AbsenModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'user_id': instance.userId,
-      'nama': instance.nama,
+      'user': instance.user,
       'status': instance.status,
       'tipe': instance.tipe,
       'telat_waktu': instance.telatWaktu,

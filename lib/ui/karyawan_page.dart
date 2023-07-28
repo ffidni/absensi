@@ -1,5 +1,6 @@
 import 'package:absensi/blocs/absensi/absensi_bloc.dart';
 import 'package:absensi/blocs/auth/auth_bloc.dart';
+import 'package:absensi/blocs/user/user_bloc.dart';
 import 'package:absensi/models/page_fetchs/kehadiran_fetchs_model.dart';
 import 'package:absensi/models/tables/absen_model.dart';
 import 'package:absensi/models/tables/user_model.dart';
@@ -7,6 +8,7 @@ import 'package:absensi/shared/shared_methods.dart';
 import 'package:absensi/shared/theme.dart';
 import 'package:absensi/ui/absen_form_page.dart';
 import 'package:absensi/ui/karyawan_form_page.dart';
+import 'package:absensi/widgets/EmptyData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
@@ -21,26 +23,7 @@ class _KaryawanPageState extends State<KaryawanPage> {
   DateTime date = DateTime.now();
   List<int> selectedIds = [];
 
-  List<UserModel> dataKaryawan = [
-    UserModel(
-      id: 1,
-      email: "haikal@gmail.com",
-      nama: "Haikal",
-      tipeUser: "karyawan",
-    ),
-    UserModel(
-      id: 2,
-      email: "aldi@gmail.com",
-      nama: "Aldi",
-      tipeUser: "karyawan",
-    ),
-    UserModel(
-      id: 3,
-      email: "fitri@gmail.com",
-      nama: "Fitri",
-      tipeUser: "karyawan",
-    ),
-  ];
+  List<UserModel> dataKaryawan = [];
 
   void deleteUser() {}
 
@@ -98,30 +81,48 @@ class _KaryawanPageState extends State<KaryawanPage> {
             ),
         ],
       ),
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {},
+      body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          return SafeArea(
-            child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
+          return BlocConsumer<UserBloc, UserState>(
+            listener: (context, state) {
+              if (state is UserFailed) {
+                showSnackbar(context, state.error.message);
+              } else if (state is UserDeleteUserSuccess) {
+                showSnackbar(context, "Berhasil menghapus user");
+              }
+            },
+            builder: (context, state) {
+              if (state is UserGetKaryawanSuccess) {
+                dataKaryawan = state.karyawan;
+              }
+              return SafeArea(
+                child: SingleChildScrollView(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 20,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        dataKaryawan.isEmpty
+                            ? EmptyData(
+                                title: "Tidak ada karyawan",
+                                icon: Icons.not_interested_outlined,
+                              )
+                            : Column(
+                                children: dataKaryawan
+                                    .map(
+                                      (e) => buildKaryawanCard(e),
+                                    )
+                                    .toList(),
+                              )
+                      ],
+                    ),
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      children: dataKaryawan
-                          .map(
-                            (e) => buildKaryawanCard(e),
-                          )
-                          .toList(),
-                    )
-                  ],
-                ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),
@@ -189,12 +190,6 @@ class _KaryawanPageState extends State<KaryawanPage> {
                           Row(
                             children: [
                               Text(
-                                "Nama : ",
-                                style: blackText.copyWith(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
                                 "${e.nama}",
                                 style: blackText.copyWith(
                                   fontSize: 18,
@@ -208,15 +203,10 @@ class _KaryawanPageState extends State<KaryawanPage> {
                       Row(
                         children: [
                           Text(
-                            "Email : ",
-                            style: blackText.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
                             "${e.email}",
-                            style: blackText.copyWith(
-                              fontSize: 18,
+                            style: greyText.copyWith(
+                              fontSize: 16,
+                              fontWeight: semiBold,
                             ),
                           ),
                         ],

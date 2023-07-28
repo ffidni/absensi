@@ -16,17 +16,18 @@ class RoundedTitleDropdown extends StatelessWidget {
   final List<dynamic> items;
   final String hintText;
   final String name;
-  final String? value;
+  final dynamic value;
   final String type;
-  List<String? Function(String?)>? validators;
+  dynamic validators;
   Function(dynamic)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return FormBuilderDropdown(
       name: name,
-      initialValue: value ?? items[0],
+      initialValue: value ?? null,
       isExpanded: true,
+      // validator: validators,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(16),
         border: OutlineInputBorder(
@@ -34,12 +35,15 @@ class RoundedTitleDropdown extends StatelessWidget {
         ),
         hintText: hintText,
       ),
-      onChanged: (item) => onChanged!(item!),
+      // onChanged: (item) => onChanged!(item!),
+      onChanged: (value) {
+        print(value);
+      },
       items: items
           .map(
             (e) => DropdownMenuItem(
               value: e,
-              child: Text(hintText + (type == "string" ? e : e.name)),
+              child: Text(hintText + (type == "string" ? e : e.nama)),
             ),
           )
           .toList(),

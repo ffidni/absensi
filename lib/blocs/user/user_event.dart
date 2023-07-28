@@ -7,6 +7,10 @@ abstract class UserEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class GetAllKaryawan extends UserEvent {}
+
+class UserResetState extends UserEvent {}
+
 class UpdateUser extends UserEvent {
   final int userId;
   final RegisterFormModel data;
@@ -28,10 +32,10 @@ class UpdateUserByAdmin extends UserEvent {
 }
 
 class DeleteUser extends UserEvent {
-  final int userId;
+  final List<int> ids;
 
-  const DeleteUser(this.userId);
+  const DeleteUser(this.ids);
 
   @override
-  List<Object> get props => [userId];
+  List<Object> get props => [ids];
 }

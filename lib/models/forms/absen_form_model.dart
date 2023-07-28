@@ -9,11 +9,13 @@ class AbsenFormModel {
   @JsonKey(name: "user_id")
   String? userId;
   String? tipe;
+  String? tanggal;
+  String? status;
+  @JsonKey(name: "telat_waktu")
+  String? telatWaktu;
 
-  AbsenFormModel({
-    this.userId,
-    this.tipe,
-  });
+  AbsenFormModel(
+      {this.userId, this.tipe, this.tanggal, this.status, this.telatWaktu});
 
   Map<String, dynamic> toJson() => _$AbsenFormModelToJson(this);
 

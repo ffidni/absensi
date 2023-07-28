@@ -9,12 +9,19 @@ class EmptyData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height / 2,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 40),
           const SizedBox(height: 3),
-          Text("Belum ada $title", style: blackText.copyWith(fontSize: 20)),
+          Text(
+            title,
+            style: blackText.copyWith(fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

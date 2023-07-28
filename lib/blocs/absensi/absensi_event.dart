@@ -42,15 +42,23 @@ class AbsensiGetLaporanKehadiran extends AbsensiEvent {
 
 class AbsensiEdit extends AbsensiEvent {
   final int id;
-  final AbsenFormPage absenForm;
+  final AbsenFormModel absenForm;
   const AbsensiEdit(this.id, this.absenForm);
 
   @override
   List<Object> get props => [id, absenForm];
 }
 
+class AbsensiAdd extends AbsensiEvent {
+  final AbsenFormModel absenForm;
+  const AbsensiAdd(this.absenForm);
+
+  @override
+  List<Object> get props => [absenForm];
+}
+
 class AbsensiDelete extends AbsensiEvent {
-  final int id;
+  final List<int> id;
   const AbsensiDelete(this.id);
 
   @override

@@ -89,6 +89,32 @@ class AuthService {
     }
   }
 
+  Future<List<UserModel>> getAllKaryawan() async {
+    try {
+      final token = await getToken();
+      final res = await http.get(
+        Uri.parse("$apiBaseUrl/karyawan"),
+        headers: {"Authorization": token},
+      );
+
+      final decodedBody = jsonDecode(res.body);
+
+      if (res.statusCode >= 300) {
+        throw ErrorException(
+          decodedBody["message"],
+          data: decodedBody['data'],
+          statusCode: res.statusCode,
+        );
+      }
+
+      return List.from(decodedBody['data'])
+          .map((e) => UserModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> deleteUser(int userId) async {
     try {
       final token = await getToken();

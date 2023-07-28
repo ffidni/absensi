@@ -56,6 +56,27 @@ class AbsensiService {
     }
   }
 
+  Future<void> addAbsen(AbsenFormModel data) async {
+    try {
+      final token = await AuthService().getToken();
+      final res = await http.post(
+        Uri.parse("$apiBaseUrl/absensi"),
+        body: data.toJson(),
+        headers: {"Authorization": token},
+      );
+      final decodedBody = jsonDecode(res.body);
+      if (res.statusCode >= 300) {
+        throw ErrorException(
+          decodedBody["message"],
+          data: decodedBody['data'],
+          statusCode: res.statusCode,
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> editAbsen(int id, AbsenFormModel data) async {
     try {
       final token = await AuthService().getToken();
