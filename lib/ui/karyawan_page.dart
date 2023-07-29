@@ -56,6 +56,13 @@ class _KaryawanPageState extends State<KaryawanPage> {
 
   Future<void> refreshPage() async {
     getKaryawan();
+    resetSelected();
+  }
+
+  void resetSelected() {
+    setState(() {
+      selectedIds = [];
+    });
   }
 
   @override
@@ -112,6 +119,14 @@ class _KaryawanPageState extends State<KaryawanPage> {
               listener: (context, state) {
                 if (state is UserFailed) {
                   showSnackbar(context, state.error.message);
+                } else if (state is UserDeleteUserSuccess) {
+                  showSnackbar(
+                    context,
+                    "Berhasil menghapus karyawan",
+                    isError: false,
+                  );
+
+                  refreshPage();
                 }
               },
               builder: (context, state) {

@@ -80,6 +80,7 @@ class _AbsenPageState extends State<AbsenPage> {
 
   Future<void> refreshPage() async {
     getAbsenData();
+    resetSelected();
   }
 
   @override
@@ -89,10 +90,7 @@ class _AbsenPageState extends State<AbsenPage> {
         margin: const EdgeInsets.only(bottom: 30, right: 8),
         child: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          onPressed: () => PersistentNavBarNavigator.pushNewScreen(
-            context,
-            screen: AbsenFormPage(),
-          ),
+          onPressed: goToAbsenForm,
           child: const Icon(Icons.add,
               color: Color.fromARGB(255, 62, 62, 62), size: 32),
         ),

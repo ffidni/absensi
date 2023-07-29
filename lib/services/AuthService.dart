@@ -66,6 +66,7 @@ class AuthService {
       }
       return user;
     } catch (e) {
+      print(e);
       rethrow;
     }
   }

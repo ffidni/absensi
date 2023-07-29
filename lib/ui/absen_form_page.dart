@@ -120,6 +120,7 @@ class _AbsenFormPageState extends State<AbsenFormPage> {
                 print(state);
                 if (state is AbsensiSuccess) {
                   await showSnackbar(context, state.message, isError: false);
+                  Navigator.pop(context);
                 }
               },
               builder: (context, state) {

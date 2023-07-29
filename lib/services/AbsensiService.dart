@@ -21,11 +21,13 @@ class AbsensiService {
       } else if (userId != null) {
         url = "$url?user_id=$userId";
       }
+
       final res = await http.get(
         Uri.parse(url),
         headers: {"Authorization": token},
       ).timeout(const Duration(seconds: 10));
       final decodedBody = jsonDecode(res.body);
+      print(decodedBody['data']);
       if (res.statusCode >= 300) throw ErrorException(decodedBody['messages']);
       return List.from(decodedBody['data'])
           .map((e) => AbsenModel.fromJson(e))

@@ -44,6 +44,7 @@ Future<void> _handleGetAll(
 }) async {
   List<AbsenModel> data =
       await AbsensiService().getAllAbsen(date: date, userId: userId);
+  print(data);
   emit(AbsensiGetAllSuccess(data));
 }
 

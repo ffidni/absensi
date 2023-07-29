@@ -44,6 +44,7 @@ class _KaryawanFormPageState extends State<KaryawanFormPage> {
   }
 
   void deleteUser() {
+    print(widget.user!.id);
     context.read<UserBloc>().add(DeleteUser([widget.user!.id!]));
   }
 
