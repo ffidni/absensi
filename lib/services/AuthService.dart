@@ -11,6 +11,7 @@ import "package:absensi/shared/shared_values.dart";
 class AuthService {
   Future<UserModel> login(LoginFormModel data) async {
     try {
+      print(apiBaseUrl);
       final res = await http
           .post(
             Uri.parse("$apiBaseUrl/login"),
@@ -176,11 +177,13 @@ class AuthService {
   Future<bool> isTokenExpired() async {
     const storage = FlutterSecureStorage();
     String? tokenExpiresString = await storage.read(key: "token_expires_in");
+    print(tokenExpiresString);
     if (tokenExpiresString == null) return true;
     int tokenExpiresIn = int.parse(tokenExpiresString);
+    print(tokenExpiresIn);
 
     final DateTime expirationDate =
-        DateTime.fromMicrosecondsSinceEpoch(tokenExpiresIn * 1000);
+        DateTime.fromMillisecondsSinceEpoch(tokenExpiresIn * 1000);
     final currentTime = DateTime.now();
     return currentTime.isAfter(expirationDate);
   }
@@ -193,6 +196,8 @@ class AuthService {
 
       token = 'Bearer $token';
       bool tokenExpired = await isTokenExpired();
+      print("token expired: $tokenExpired");
+      print(token);
       if (tokenExpired) {
         final res = await http.get(
           Uri.parse("$apiBaseUrl/refresh-token"),
@@ -201,8 +206,12 @@ class AuthService {
         final decodedBody = jsonDecode(res.body);
         if (res.statusCode >= 300) throw decodedBody['message'];
 
-        String newToken = decodedBody['data'];
+        String newToken = decodedBody['data']['token'];
+        String tokenExpiresIn =
+            decodedBody['data']['token_expires_in'].toString();
+        print("token expired: $tokenExpiresIn");
         await storage.write(key: "token", value: newToken);
+        await storage.write(key: "token_expires_in", value: tokenExpiresIn);
         return "Bearer $newToken";
       }
       return token;
@@ -242,6 +251,7 @@ class AuthService {
 
   Future<void> logout() async {
     try {
+      await clearCredential(); //fix
       final token = await getToken();
       final res = await http.post(
         Uri.parse("$apiBaseUrl/logout"),
@@ -255,7 +265,6 @@ class AuthService {
           statusCode: res.statusCode,
         );
       }
-      await clearCredential(); //fix
     } catch (e) {
       rethrow;
     }

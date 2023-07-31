@@ -25,4 +25,5 @@ List<Map<String, dynamic>> navigationList = [
   },
 ];
 
-String apiBaseUrl = "https://pkl.lukmanaditiya.site/haikal_absensi_api/api";
+// String apiBaseUrl = "https://pkl.lukmanaditiya.site/haikal_absensi_api/api";
+String apiBaseUrl = "http://10.0.2.2:8000/api";
