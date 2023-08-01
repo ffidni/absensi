@@ -1,8 +1,14 @@
+import 'dart:convert';
+
+import 'package:absensi/shared/shared_class.dart';
+import 'package:absensi/shared/shared_values.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:absensi/shared/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import "package:flutter_form_builder/flutter_form_builder.dart";
+import "package:dio/dio.dart";
 
 String formatIndonesianDate(DateTime dateTime, {bool hideDays = false}) {
   final List<String> monthNamesIndonesian = [
@@ -132,4 +138,65 @@ int getDayOfMonth() {
   int dayOfMonth = currentDate.day;
 
   return dayOfMonth;
+}
+
+Future<bool> isTokenExpired() async {
+  const storage = FlutterSecureStorage();
+  String? tokenExpiresString = await storage.read(key: "token_expires_in");
+  print(tokenExpiresString);
+  if (tokenExpiresString == null) return true;
+  int tokenExpiresIn = int.parse(tokenExpiresString);
+  print(tokenExpiresIn);
+
+  final DateTime expirationDate =
+      DateTime.fromMillisecondsSinceEpoch(tokenExpiresIn * 1000);
+  final currentTime = DateTime.now();
+  return currentTime.isAfter(expirationDate);
+}
+
+Future<String?> getToken() async {
+  final dio = Dio();
+  const storage = FlutterSecureStorage();
+  try {
+    String? token = await storage.read(key: "token");
+    print(token);
+    if (token == null) return null;
+
+    token = 'Bearer $token';
+    bool tokenExpired = await isTokenExpired();
+    print("token expired: $tokenExpired");
+    // print(token);
+    if (tokenExpired) {
+      print("HEY");
+      final res = await dio.get(
+        "$apiBaseUrl/refresh-token",
+        options: Options(headers: {"Authorization": token}),
+      );
+      print(res.data);
+      final decodedBody = res.data;
+      if (res.statusCode! >= 300) {
+        throw ErrorException(
+          decodedBody["message"],
+          data: decodedBody['data'],
+          statusCode: res.statusCode,
+          requestOptions: RequestOptions(),
+        );
+      }
+      String newToken = decodedBody['data']['token'];
+      String tokenExpiresIn =
+          decodedBody['data']['token_expires_in'].toString();
+      print("token expired: $tokenExpiresIn");
+      await storage.write(key: "token", value: newToken);
+      await storage.write(key: "token_expires_in", value: tokenExpiresIn);
+      return "Bearer $newToken";
+    }
+    return token;
+  } catch (e) {
+    if (e is DioException) {
+      if (e.response!.data['status'] == 500) {
+        await storage.delete(key: "token");
+      }
+    }
+    return null;
+  }
 }

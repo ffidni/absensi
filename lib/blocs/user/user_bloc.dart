@@ -3,6 +3,7 @@ import 'package:absensi/models/tables/user_model.dart';
 import 'package:absensi/services/AuthService.dart';
 import 'package:absensi/shared/shared_class.dart';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 part 'user_event.dart';
@@ -25,7 +26,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           await _handleCreate(event.data, emit);
         }
       } catch (e) {
-        emit(UserFailed(ErrorException(e.toString())));
+        emit(UserFailed(
+            ErrorException(e.toString(), requestOptions: RequestOptions())));
       }
     });
   }

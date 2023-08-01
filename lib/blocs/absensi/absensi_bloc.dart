@@ -5,6 +5,7 @@ import 'package:absensi/services/AbsensiService.dart';
 import 'package:absensi/shared/shared_class.dart';
 import 'package:absensi/ui/absen_form_page.dart';
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 part 'absensi_event.dart';
@@ -31,7 +32,8 @@ class AbsensiBloc extends Bloc<AbsensiEvent, AbsensiState> {
           await _handleDelete(event.id, emit);
         }
       } catch (e) {
-        emit(AbsensiFailed(ErrorException(e.toString())));
+        emit(AbsensiFailed(
+            ErrorException(e.toString(), requestOptions: RequestOptions())));
       }
     });
   }

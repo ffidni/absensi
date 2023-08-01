@@ -34,6 +34,13 @@ class AuthUpdateUser extends AuthEvent {
   List<Object> get props => [data];
 }
 
-class AuthLogout extends AuthEvent {}
+class AuthLogout extends AuthEvent {
+  bool expired;
+
+  AuthLogout({this.expired = false});
+
+  @override
+  List<Object> get props => [expired];
+}
 
 class AuthGetUserByToken extends AuthEvent {}

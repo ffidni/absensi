@@ -4,15 +4,22 @@ import 'package:absensi/models/forms/absen_form_model.dart';
 import 'package:absensi/models/page_fetchs/kehadiran_fetchs_model.dart';
 import 'package:absensi/models/tables/absen_model.dart';
 import 'package:absensi/services/AuthService.dart';
+import 'package:dio/dio.dart';
 import 'package:absensi/shared/shared_class.dart';
 import 'package:absensi/shared/shared_values.dart';
-import "package:http/http.dart" as http;
 
 class AbsensiService {
+  final Dio _dio = Dio(BaseOptions(
+    baseUrl: apiBaseUrl,
+  ));
+
+  AbsensiService() {
+    _dio.interceptors.add(CustomDioInterceptor());
+  }
+
   Future<List<AbsenModel>> getAllAbsen({String? date, int? userId}) async {
     try {
-      final token = await AuthService().getToken();
-      String url = "$apiBaseUrl/absensi";
+      String url = "/absensi";
       if (date != null) {
         url = "$url?date=$date";
         if (userId != null) {
@@ -22,14 +29,10 @@ class AbsensiService {
         url = "$url?user_id=$userId";
       }
 
-      final res = await http.get(
-        Uri.parse(url),
-        headers: {"Authorization": token},
-      ).timeout(const Duration(seconds: 10));
-      final decodedBody = jsonDecode(res.body);
-      print(decodedBody['data']);
-      if (res.statusCode >= 300) throw ErrorException(decodedBody['messages']);
-      return List.from(decodedBody['data'])
+      final res = await _dio.get(
+        url,
+      );
+      return List.from(res.data['data'])
           .map((e) => AbsenModel.fromJson(e))
           .toList();
     } catch (e) {
@@ -39,20 +42,10 @@ class AbsensiService {
 
   Future<KehadiranFetchsModel> getLaporanKehadiran(int userId) async {
     try {
-      final token = await AuthService().getToken();
-      final res = await http.get(
-        Uri.parse("$apiBaseUrl/laporan-kehadiran/$userId"),
-        headers: {"Authorization": token},
-      ).timeout(const Duration(seconds: 10));
-      final decodedBody = jsonDecode(res.body);
-      if (res.statusCode >= 300) {
-        throw ErrorException(
-          decodedBody["message"],
-          data: decodedBody['data'],
-          statusCode: res.statusCode,
-        );
-      }
-      return KehadiranFetchsModel.fromJson(decodedBody['data']);
+      final res = await _dio.get(
+        "/laporan-kehadiran/$userId",
+      );
+      return KehadiranFetchsModel.fromJson(res.data['data']);
     } catch (e) {
       rethrow;
     }
@@ -60,20 +53,10 @@ class AbsensiService {
 
   Future<void> addAbsen(AbsenFormModel data) async {
     try {
-      final token = await AuthService().getToken();
-      final res = await http.post(
-        Uri.parse("$apiBaseUrl/absensi"),
-        body: data.toJson(),
-        headers: {"Authorization": token},
-      ).timeout(const Duration(seconds: 10));
-      final decodedBody = jsonDecode(res.body);
-      if (res.statusCode >= 300) {
-        throw ErrorException(
-          decodedBody["message"],
-          data: decodedBody['data'],
-          statusCode: res.statusCode,
-        );
-      }
+      final res = await _dio.post(
+        "/absensi",
+        data: data.toJson(),
+      );
     } catch (e) {
       rethrow;
     }
@@ -81,20 +64,10 @@ class AbsensiService {
 
   Future<void> editAbsen(int id, AbsenFormModel data) async {
     try {
-      final token = await AuthService().getToken();
-      final res = await http.put(
-        Uri.parse("$apiBaseUrl/absensi/$id"),
-        body: data.toJson(),
-        headers: {"Authorization": token},
-      ).timeout(const Duration(seconds: 10));
-      final decodedBody = jsonDecode(res.body);
-      if (res.statusCode >= 300) {
-        throw ErrorException(
-          decodedBody["message"],
-          data: decodedBody['data'],
-          statusCode: res.statusCode,
-        );
-      }
+      final res = await _dio.put(
+        "/absensi/$id",
+        data: data.toJson(),
+      );
     } catch (e) {
       rethrow;
     }
@@ -102,19 +75,9 @@ class AbsensiService {
 
   Future<void> deleteAbsen(int id) async {
     try {
-      final token = await AuthService().getToken();
-      final res = await http.delete(
-        Uri.parse("$apiBaseUrl/absensi/$id"),
-        headers: {"Authorization": token},
-      ).timeout(const Duration(seconds: 10));
-      final decodedBody = jsonDecode(res.body);
-      if (res.statusCode >= 300) {
-        throw ErrorException(
-          decodedBody["message"],
-          data: decodedBody['data'],
-          statusCode: res.statusCode,
-        );
-      }
+      final res = await _dio.delete(
+        "/absensi/$id",
+      );
     } catch (e) {
       rethrow;
     }
